@@ -2,7 +2,7 @@
 using BaseUnitOfWork.Application.Interfaces.IRepositories;
 using BaseUnitOfWork.Application.Interfaces.IService;
 
-namespace BaseUnitOfWork.Infrastructure.Interfaces
+namespace BaseUnitOfWork.Infrastructure.Services
 {
     public class UnitOfService : IUnitOfService
     {

@@ -7,7 +7,7 @@ using BaseUnitOfWork.Application.ValueObjects.Response;
 using BaseUnitOfWork.Domain.Entities;
 using BaseUnitOfWork.Infrastructure.Extensions.FluentValidationRules.Example;
 
-namespace BaseUnitOfWork.Infrastructure.Interfaces
+namespace BaseUnitOfWork.Infrastructure.Services
 {
     public class ExampleService : IExampleService
     {
