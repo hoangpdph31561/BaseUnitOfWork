@@ -2,7 +2,7 @@
 
 The base solution is divided into 4 layers:
 
-Entity Layer: This layer is responsible for storing the entities (data models) that represent the database entities. It typically includes classes that map directly to the database tables or entities.
+Domain Layer: This layer is responsible for storing the entities (data models) that represent the database entities. It typically includes classes that map directly to the database tables or entities.
 
 Application Layer: This layer contains the request and response models, as well as the interfaces for the Repository and Service layers. It acts as the intermediary between the API layer and the Infrastructure layer, handling the flow of data and business logic.
 
