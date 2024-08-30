@@ -1,5 +1,6 @@
 ﻿using BaseUnitOfWork.Application.DataTransferObjects.Example.Requests;
 using BaseUnitOfWork.Application.Interfaces.IService;
+using BaseUnitOfWork.Application.ValueObjects.Request;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseUnitOfWork.API.Controllers
@@ -24,6 +25,12 @@ namespace BaseUnitOfWork.API.Controllers
         public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken = default)
         {
             var response = await _unitOfService.ExampleService.GetExample(id, cancellationToken);
+            return Ok(response);
+        }
+        [HttpGet("pagination")]
+        public async Task<IActionResult> Get([FromQuery] PaginationRequest paginationRequest, CancellationToken cancellationToken = default)
+        {
+            var response = await _unitOfService.ExampleService.GetExamplesWithPagination(paginationRequest, cancellationToken);
             return Ok(response);
         }
         [HttpPost]

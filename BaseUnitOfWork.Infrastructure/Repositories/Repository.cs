@@ -1,4 +1,6 @@
 ﻿using BaseUnitOfWork.Application.Interfaces.IRepositories;
+using BaseUnitOfWork.Application.ValueObjects.Request;
+using BaseUnitOfWork.Application.ValueObjects.Response;
 using BaseUnitOfWork.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -68,6 +70,43 @@ namespace BaseUnitOfWork.Infrastructure.Repositories
             }
             return await query.ToListAsync(cancellationToken);
         }
+        public async Task<PaginatedResult<T>> GetWithPaginationAsync(PaginationRequest paginationRequest, Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false, CancellationToken cancellationToken = default)
+        {
+            IQueryable<T> query;
+            if (tracked)
+            {
+                query = _dbSet;
+            }
+            else
+            {
+                query = _dbSet.AsNoTracking();
+            }
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
 
+            int totalCount = await query.CountAsync(cancellationToken);
+            var data = await query.Skip((paginationRequest.Page - 1) * paginationRequest.PageSize)
+                                  .Take(paginationRequest.PageSize)
+                                  .ToListAsync(cancellationToken);
+
+            PaginatedResult<T> paginatedResult = new()
+            {
+                Page = paginationRequest.Page,
+                PageSize = paginationRequest.PageSize,
+                TotalCount = totalCount,
+                Data = data
+            };
+            return paginatedResult;
+        }
     }
 }

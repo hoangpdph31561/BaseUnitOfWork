@@ -1,4 +1,5 @@
 ﻿using BaseUnitOfWork.Application.DataTransferObjects.Example.Requests;
+using BaseUnitOfWork.Application.ValueObjects.Request;
 using BaseUnitOfWork.Application.ValueObjects.Response;
 
 namespace BaseUnitOfWork.Application.Interfaces.IService
@@ -10,6 +11,7 @@ namespace BaseUnitOfWork.Application.Interfaces.IService
         Task<APIResponse> CreateExample(ExampleCreateRequest exampleCreateRequest, CancellationToken cancellationToken = default);
         Task<APIResponse> UpdateExample(ExampleUpdateRequest exampleUpdateRequest, CancellationToken cancellationToken = default);
         Task<APIResponse> DeleteExample(ExampleDeleteRequest exampleDeleteRequest, CancellationToken cancellationToken = default);
+        Task<APIResponse> GetExamplesWithPagination(PaginationRequest paginationRequest, CancellationToken cancellationToken = default);
 
     }
 }

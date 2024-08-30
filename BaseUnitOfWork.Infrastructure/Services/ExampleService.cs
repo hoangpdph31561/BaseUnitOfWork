@@ -3,6 +3,7 @@ using BaseUnitOfWork.Application.DataTransferObjects.Example;
 using BaseUnitOfWork.Application.DataTransferObjects.Example.Requests;
 using BaseUnitOfWork.Application.Interfaces.IRepositories;
 using BaseUnitOfWork.Application.Interfaces.IService;
+using BaseUnitOfWork.Application.ValueObjects.Request;
 using BaseUnitOfWork.Application.ValueObjects.Response;
 using BaseUnitOfWork.Domain.Entities;
 using BaseUnitOfWork.Infrastructure.Extensions.FluentValidationRules.Example;
@@ -115,6 +116,31 @@ namespace BaseUnitOfWork.Infrastructure.Services
                 _response.ErrorMessages.Add(ex.Message);
                 return _response;
             }
+        }
+
+        public async Task<APIResponse> GetExamplesWithPagination(PaginationRequest paginationRequest, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var result = await _unitOfWork.Example.GetWithPaginationAsync(paginationRequest, x => !x.Deleted && x.Status != Domain.Enums.EntityStatus.Deleted, cancellationToken: cancellationToken);
+                var paginationResult = new PaginatedResult<ExampleDto>
+                {
+                    Data = _mapper.Map<IEnumerable<ExampleDto>>(result.Data),
+                    Page = result.Page,
+                    PageSize = result.PageSize,
+                    TotalCount = result.TotalCount
+                };
+                _response.IsSuccess = true;
+                _response.StatusCode = System.Net.HttpStatusCode.OK;
+                _response.Result = paginationResult;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                _response.ErrorMessages.Add(ex.Message);
+            }
+            return _response;
         }
 
         public async Task<APIResponse> UpdateExample(ExampleUpdateRequest exampleUpdateRequest, CancellationToken cancellationToken = default)
